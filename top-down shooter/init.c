@@ -34,3 +34,12 @@ void initSDL(void)
 
     SDL_ShowCursor(0);
 }
+
+void initGame(void)
+{
+    initFonts();
+
+    initBullets();
+    
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "initGame over");
+}

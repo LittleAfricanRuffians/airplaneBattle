@@ -13,8 +13,12 @@
 #include "structs.h"
 #include "stage.h"
 #include "draw.h"
+#include "text.h"
 #include "input.h"
 #include "player.h"
+#include "bullets.h"
+#include "enemies.h"
+#include "items.h"
 
 App app;
 Stage stage;

@@ -13,8 +13,10 @@
 
 #define MAX_KEYBOARD_KEYS   350
 
-#define SIDE_PLAYER         0
-#define SIDE_ALIGN          1
+#define MAX_MOUSE_BUTTON    10
+
+// #define SIDE_PLAYER         0
+// #define SIDE_ALIGN          1
 
 #define FPS                 60
 #define ALIEN_BULLET_SPEED  8
@@ -33,11 +35,24 @@
 
 #define MAX_SCORE_NAME_LENGTH   16
 
+#define WON_MAX             3
 
 enum {
     TEXT_LEFT,
     TEXT_CENTER,
     TEXT_RIGHT
 };
+
+enum {
+    SIDE_NONE,
+    SIDE_PLAYER,
+    SIDE_ENEMY
+};
+
+typedef enum {
+    WPN_PISTOL = 0,
+    WPN_UZI,
+    WPN_SHOTGUN
+}WeaponType;
 
 #endif

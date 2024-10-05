@@ -26,12 +26,24 @@ void doInput(void)
                 strncpy(app.inputText, event.text.text, MAX_LINE_LENGTH);
             break;
 
+            case SDL_MOUSEBUTTONDOWN:
+                doMouseButtonDown(&event.button);
+            break;
+
+            case SDL_MOUSEBUTTONUP:
+                doMouseButtonUp(&event.button);
+            break;
+
+            case SDL_MOUSEWHEEL:
+                app.mouse.wheel = event.wheel.y;
+            break;
+
             default:
                 break;
         }
     }
 
-    SDL_GetMouseState(&app.mosue.x, &app.mosue.y);
+    SDL_GetMouseState(&app.mouse.x, &app.mouse.y);
 }
 
 void doKeyDown(SDL_KeyboardEvent *event)
@@ -48,4 +60,14 @@ void doKeyUp(SDL_KeyboardEvent *event)
     {
         app.keyboard[event->keysym.scancode] = 0;
     }
+}
+
+void doMouseButtonUp(SDL_MouseButtonEvent *event)
+{
+    app.mouse.button[event->button] = 0;
+}
+
+void doMouseButtonDown(SDL_MouseButtonEvent *event)
+{
+    app.mouse.button[event->button] = 1;
 }

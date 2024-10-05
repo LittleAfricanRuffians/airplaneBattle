@@ -17,6 +17,8 @@ struct Texture{
 typedef struct {
     int x;
     int y;
+    int button[MAX_MOUSE_BUTTON];  //代表鼠标的上的按键
+    int wheel;
 } Mouse;
 
 typedef struct {
@@ -26,10 +28,11 @@ typedef struct {
     int keyboard[MAX_KEYBOARD_KEYS];
     struct Texture textureHead, *textureTail;
     char inputText[MAX_LINE_LENGTH];
-    Mouse mosue;
+    Mouse mouse;
 } App;
 
 typedef struct entity {
+    int side;
     float x;
     float y;
     int w;
@@ -38,12 +41,21 @@ typedef struct entity {
     float dy;
     int health;
     int angle;
+    int radius;
+    int reload;
+    int weaponType;
     SDL_Texture *texture;
     struct entity *next;
+    void (*tick)(void);
+    void (*touch)(struct entity *other);
+    void (*die)(void);
 } Entity;
 
 typedef struct {
     Entity entityHead, *entityTail;
+    Entity bulletHead, *bulletTail;
+    int ammo[WON_MAX];
+    int score;
 } Stage;
 
 
