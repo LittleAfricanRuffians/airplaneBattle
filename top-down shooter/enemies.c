@@ -22,22 +22,58 @@ void addEnemy(int x, int y)
     stage.entityTail = e;
 
     e->side = SIDE_ENEMY;
-    e->texture = enemyTexture;
     e->health = 1;
     e->x = x;
     e->y = y;
-    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
-    e->radius = 32;
 
-    e->tick = tick;
+    e->color.a = e->color.r = e->color.g = e->color.b = 255;
+
+    switch(rand() % 12)
+    {
+        case 0:
+            e->texture = enemyTexture;
+            e->tick = tick;
+            e->radius = 35;
+            e->health = 25;
+        break;
+
+        case 1:
+        case 2:
+            e->texture = enemyTexture;
+            e->tick = tick;
+            e->radius = 26;
+            e->health = 1;
+        break;
+
+        default:
+            e->texture = enemyTexture;
+            e->tick = tick;
+            e->radius = 32;
+            e->health = 5;
+        break;
+    }
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+
     e->die = die;
 }
 
 static void tick(void)
 {
-    self->angle = getAngle(self->x, self->y, player->x, player->y);
+    if(player != NULL)
+    {
+        self->angle = getAngle(self->x, self->y, player->x, player->y);
 
-    calcSlope(player->x, player->y, self->x,self->y, &self->dx, &self->dy);
+        calcSlope(player->x, player->y, self->x,self->y, &self->dx, &self->dy);
+
+        self->reload = MAX(self->reload - 1, 0);
+
+        if(self->reload <= 0 && getDistance(self->x, self->y, player->x, player->y) <= SCREEN_HEIGHT / 2)
+        {
+            fireEnemyBullet();
+
+            self->reload = FPS * 3;
+        }
+    }
 }
 
 static void die(void)
@@ -90,8 +126,8 @@ void doEntities(void)
 
         if(e == player)
         {
-            e->x = MIN(MAX(e->x, e->w/2), SCREEN_WIDTH - e->w/2);
-            e->y = MIN(MAX(e->y, e->h/2), SCREEN_HEIGHT - e->h/2);
+            e->x = MIN(MAX(e->x, e->w/2), ARENA_WIDTH - e->w/2);
+            e->y = MIN(MAX(e->y, e->h/2), ARENA_HEIGHT - e->h/2);
         }
 
         if(e->touch)
@@ -101,6 +137,8 @@ void doEntities(void)
 
         if(e->health <= 0)
         {
+            addEnemyDeathEffect();
+            
             if(e->die)
             {
                 e->die();

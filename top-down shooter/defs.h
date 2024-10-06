@@ -15,9 +15,6 @@
 
 #define MAX_MOUSE_BUTTON    10
 
-// #define SIDE_PLAYER         0
-// #define SIDE_ALIGN          1
-
 #define FPS                 60
 #define ALIEN_BULLET_SPEED  8
 
@@ -36,6 +33,16 @@
 #define MAX_SCORE_NAME_LENGTH   16
 
 #define WON_MAX             3
+
+#define ARENA_WIDTH         (SCREEN_WIDTH*5)
+
+#define ARENA_HEIGHT        (SCREEN_HEIGHT*5)
+
+#define GRID_SIZE           40
+
+#define GRID_RENDER_WIDTH   (SCREEN_WIDTH/GRID_SIZE)
+
+#define GRID_RENDER_HEIGHT  (SCREEN_HEIGHT/GRID_SIZE + 1)
 
 enum {
     TEXT_LEFT,

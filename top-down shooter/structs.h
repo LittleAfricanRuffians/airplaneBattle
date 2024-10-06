@@ -45,15 +45,29 @@ typedef struct entity {
     int reload;
     int weaponType;
     SDL_Texture *texture;
+    SDL_Color color;
     struct entity *next;
     void (*tick)(void);
     void (*touch)(struct entity *other);
     void (*die)(void);
 } Entity;
 
+typedef struct effect{
+    float x;
+    float y;
+    float dx;
+    float dy;
+    int life;
+    SDL_Color color;
+    SDL_Texture * texture;
+    struct effect * next;
+} Effect;
+
 typedef struct {
     Entity entityHead, *entityTail;
     Entity bulletHead, *bulletTail;
+    Effect effectHead, *effectTail;
+    SDL_Point camera;
     int ammo[WON_MAX];
     int score;
 } Stage;

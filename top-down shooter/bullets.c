@@ -49,7 +49,7 @@ static void firkDonkUzi(void)
     b->angle = player->angle;
     b->side = SIDE_PLAYER;
 
-    calcSlope(app.mouse.x, app.mouse.y, b->x, b->y, &b->dx, &b->dy);
+    calcSlope(app.mouse.x, app.mouse.y, b->x - stage.camera.x, b->y - stage.camera.y, &b->dx, &b->dy);
 
     b->dx *= 16;
     b->dy *= 16;
@@ -63,7 +63,7 @@ static void fireDonkShotgun(void)
     int i, destX, destY;
     float dx, dy;
 
-    calcSlope(app.mouse.x, app.mouse.y, player->x, player->y, &dx, &dy);
+    calcSlope(app.mouse.x, app.mouse.y, player->x - stage.camera.x, player->y - stage.camera.y, &dx, &dy);
 
     dx = player->x + (dx * 128);
     dy = player->y + (dy * 128);
@@ -109,7 +109,7 @@ static void fireDonkPistol(void)
     b->angle = player->angle;
     b->side = SIDE_PLAYER;
 
-    calcSlope(app.mouse.x, app.mouse.y, b->x, b->y, &b->dx, &b->dy);
+    calcSlope(app.mouse.x, app.mouse.y, b->x - stage.camera.x, b->y - stage.camera.y, &b->dx, &b->dy);
 
     b->dx *= 16;
     b->dy *= 16;
@@ -137,6 +137,33 @@ static void bulletHitEntity(Entity *b)
     }
 }
 
+void fireEnemyBullet(void)
+{
+    Entity * b;
+
+    b = malloc(sizeof(Entity));
+    memset(b, 0, sizeof(Entity));
+    stage.bulletTail->next = b;
+    stage.bulletTail = b;
+
+    b->x = self->x;
+    b->y = self->y;
+    b->texture = donkBullet;
+    b->health = FPS * 2;
+    b->angle = getAngle(self->x, self->y, player->x, player->y);
+    b->radius = 16;
+    b->side = SIDE_ENEMY;
+    SDL_QueryTexture(donkBullet, NULL, NULL, &b->w, &b->h);
+    b->color.r = 255;
+    b->color.g = b->color.b = 0;
+    b->color.a = 255;
+
+    calcSlope(player->x, player->y, b->x, b->y, &b->dx, &b->dy);
+    
+    b->dx *= 12;
+    b->dy *= 12;
+}
+
 void doBullets(void)
 {
     Entity *b, *prev;
@@ -150,7 +177,7 @@ void doBullets(void)
 
         bulletHitEntity(b);
 
-        if((b->x < -b->w) || (b->x > SCREEN_WIDTH) || (b->y < -b->h) || (b->y > SCREEN_HEIGHT))
+        if((b->x < -b->w) || (b->x > ARENA_WIDTH) || (b->y < -b->h) || (b->y > ARENA_HEIGHT))
         {
             b->health = 0;
         }
@@ -177,6 +204,6 @@ void drawBullets(void)
 
     for(b = stage.bulletHead.next; b != NULL; b = b->next)
     {
-        blitRotated(b->texture, b->x, b->y, b->angle);
+        blitRotated(b->texture, b->x - stage.camera.x, b->y - stage.camera.y, b->angle);
     }
 }

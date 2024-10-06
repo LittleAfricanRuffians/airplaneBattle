@@ -11,6 +11,8 @@ void initPlayer(void)
     player->health = 5;
     player->x = SCREEN_WIDTH / 2;
     player->y = SCREEN_HEIGHT / 2;
+    player->radius = 28;
+    player->side = SIDE_PLAYER;
 
     SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
 }
@@ -42,7 +44,7 @@ void doPlayer(void)
         player->dx = PLAYER_SPEED;
     }
 
-    player->angle = getAngle(player->x, player->y, app.mouse.x, app.mouse.y);
+    player->angle = getAngle((player->x - stage.camera.x), (player->y - stage.camera.y), app.mouse.x, app.mouse.y);
 
     if(player->reload == 0 && stage.ammo[player->weaponType] > 0 && app.mouse.button[SDL_BUTTON_LEFT])
     {

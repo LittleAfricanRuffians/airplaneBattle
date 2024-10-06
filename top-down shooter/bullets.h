@@ -4,6 +4,7 @@
 #include "main.h"
 
 void initBullets(void);
+void fireEnemyBullet(void);
 void doBullets(void);
 void drawBullets(void);
 
