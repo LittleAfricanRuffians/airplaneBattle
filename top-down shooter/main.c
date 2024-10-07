@@ -53,9 +53,12 @@ int main(int argc, char *argv[])
 
     initSDL();
 
+    initGame();
+
     atexit(cleanup);
 
-    initStage();
+    // initStage();
+    initTitle();
 
     then = SDL_GetTicks();
 

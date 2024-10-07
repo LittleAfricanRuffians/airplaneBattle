@@ -2,6 +2,8 @@
 
 static SDL_Texture *targetterTexture = NULL;
 static int enemySpawnTimer = 0;
+static int spawnPointsTimer = 0;
+static int gameOverTimer = 0;
 static SDL_Texture *gridTexture[4];
 
 static void logic(void);
@@ -11,6 +13,8 @@ static void drawHud(void);
 static void drawWeaponInfo(char *name, int type, int x, int y);
 static void spawnEnemy(void);
 static void drawGrid(void);
+static void spawnPointsPowerup(void);
+static void resetStage(void);
 
 void initStage(void)
 {
@@ -23,14 +27,7 @@ void initStage(void)
     gridTexture[2] = loadTexture("image/grid3.png");
     gridTexture[3] = loadTexture("image/grid4.png");
 
-    stage.entityTail = &stage.entityHead;
-    stage.bulletTail = &stage.bulletHead;
-    stage.effectTail = &stage.effectHead;
-
-    stage.ammo[1] = 1000;
-    stage.ammo[2] = 1000;
-
-    initFonts();
+    resetStage();
 
     initPlayer();
 
@@ -41,19 +38,58 @@ void initStage(void)
     initItems();
 
     initEffect();
+
+}
+
+static void resetStage(void)
+{
+    Entity * e;
+    Effect * ef;
+
+    while(stage.entityHead.next)
+    {
+        e = stage.entityHead.next;
+        stage.entityHead.next = e->next;
+        free(e);
+    }
+    
+    while(stage.bulletHead.next)
+    {
+        e = stage.bulletHead.next;
+        stage.bulletHead.next = e->next;
+        free(e);
+    }
+    
+    while(stage.effectHead.next)
+    {
+        ef = stage.effectHead.next;
+        stage.effectHead.next = ef->next;
+        free(ef);
+    }
+
+    memset(&stage, 0, sizeof(Stage));
+
+    stage.entityTail = &stage.entityHead;
+    stage.bulletTail = &stage.bulletHead;
+    stage.effectTail = &stage.effectHead;
+
+    gameOverTimer = FPS * 2;
 }
 
 static void logic(void)
 {
-    doPlayer();
+    if(player != NULL)
+    {
+        doPlayer();
 
-    doEntities();
+        doEntities();
 
-    doBullets();
-    
-    doCamera();
+        doBullets();
+        
+        doCamera();
 
-    doEffect();
+        doEffect();
+    }
 }
 
 static void draw(void)
@@ -175,5 +211,20 @@ static void drawGrid(void)
 
         my = stage.camera.y / GRID_SIZE;
         mx++;
+    }
+}
+
+static void spawnPointsPowerup(void)
+{
+    int x, y;
+
+    if(--spawnPointsTimer <= 0)
+    {
+        x = rand() % ARENA_WIDTH;
+        y = rand() % ARENA_HEIGHT;
+
+        addPointsPowerup(x, y);
+
+        spawnPointsTimer = FPS * 3 + rand() % (FPS * 2);
     }
 }

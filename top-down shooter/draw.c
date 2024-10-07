@@ -6,7 +6,7 @@ static void addTextureToCache(char *name, SDL_Texture *sdlTexture);
 //清屏
 void prepareScene(void)
 {
-    SDL_SetRenderDrawColor(app.renderer, 96, 128, 255, 255);
+    SDL_SetRenderDrawColor(app.renderer, 20, 20, 20, 255);
     SDL_RenderClear(app.renderer);
 }
 

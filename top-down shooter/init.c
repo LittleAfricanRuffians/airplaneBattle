@@ -39,7 +39,7 @@ void initGame(void)
 {
     initFonts();
 
-    initBullets();
+    // initBullets();
     
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "initGame over");
 }

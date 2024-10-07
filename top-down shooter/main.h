@@ -19,6 +19,7 @@
 #include "bullets.h"
 #include "enemies.h"
 #include "items.h"
+#include "title.h"
 
 App app;
 Stage stage;

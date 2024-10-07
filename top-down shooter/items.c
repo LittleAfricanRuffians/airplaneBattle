@@ -3,16 +3,19 @@
 static SDL_Texture *uziTexture = NULL;
 static SDL_Texture *shotgunTexture = NULL;
 static SDL_Texture *healthTexture = NULL;
+static SDL_Texture *pointsTexture = NULL;
 
 static void uziTouch(Entity *other);
 static void shotgunTouch(Entity *other);
 static void healthTouch(Entity *other);
+static void pointsTouch(Entity *other);
 
 static void addUziPowerup(int x, int y);
 static void addShotgunPowerup(int x, int y);
 static void addHealthPowerup(int x, int y);
 
 static void tick(void);
+static void pointsTick(void);
 static Entity* createPowerup(int x, int y);
 
 void initItems(void)
@@ -20,6 +23,7 @@ void initItems(void)
     uziTexture = loadTexture("image/uzi.png");
     shotgunTexture = loadTexture("image/shotgun.png");
     healthTexture = loadTexture("image/health.png");
+    pointsTexture = loadTexture("image/health.png");
 }
 
 void addRandomPowerup(int x, int y)
@@ -40,6 +44,20 @@ void addRandomPowerup(int x, int y)
     {
         addUziPowerup(x, y);
     }
+}
+
+void addPointsPowerup(int x, int y)
+{
+    Entity * e;
+
+    e = createPowerup(x, y);
+
+    e->tick = pointsTick;
+    e->health = FPS * 10;
+    e->dx = e->dy = 0;
+
+    e->texture = pointsTexture;
+    e->touch = pointsTouch;
 }
 
 static Entity* createPowerup(int x, int y)
@@ -73,6 +91,18 @@ static void tick(void)
 
     self->dx *= 0.98;
     self->dy *= 0.98;
+}
+
+static void pointsTick(void)
+{
+    tick();
+
+    self->angle += 5;
+
+    if(self->angle > 360)
+    {
+        self->angle -= 360;
+    }
 }
 
 static void addHealthPowerup(int x, int y)
@@ -129,5 +159,14 @@ static void healthTouch(Entity *other)
     {
         player->health++;
         self->health = 0; 
+    }
+}
+
+static void pointsTouch(Entity *other)
+{
+    if(other == player)
+    {
+        self->health = 0;
+        stage.score += 250;
     }
 }
